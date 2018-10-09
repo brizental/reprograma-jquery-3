@@ -1,6 +1,7 @@
 MINES = 40;
 HEIGHT = 20;
 WIDTH = 15;
+TIMER = false;
 
 function getUniqueRandomIndexesIn2DArray(table, indexes) {
     indexes = indexes ? indexes : [];
@@ -36,12 +37,77 @@ function getAdjacentCellIndexes(x, y) {
 
 var field_matrix = [];
 var field = $("#field table");
+var counter = 0;
 for (var i = 0; i < HEIGHT; i++) {
     var row_vector = [];
     var row = $("<tr>");
     for (var j = 0; j < WIDTH; j++) {
         var mine = $("<td>");
         mine.data("mines", 0);
+
+        var button = $("<div>");
+        button.addClass("button");
+        button.data("coordinates", [j, i]);
+
+        button.contextmenu(function () {
+            return false;
+        });
+
+        button.mousedown(function(event) {
+            if (!TIMER) {
+                TIMER = setInterval(function () {
+                    counter++;
+                    $("#timer").text(counter);
+                }, 1000);
+            }
+            if (event.which === 3) {
+                $(this).toggleClass("red-flag");
+                $("#mines").text($(".red-flag").length);
+            } else {
+                $("#reset").addClass("wow");
+            }
+        });
+
+        button.mouseup(function () {
+            $("#reset").removeClass("wow");
+            if (!$(this).hasClass("red-flag")) {
+                if ($(this).parent().hasClass("mine")) {
+                    $("td .button").each(function (index, button) {
+                        button.remove();
+                    })
+                    $("#reset").addClass("game-over");
+                    clearInterval(TIMER);
+                } else if ($(this).parent().data("mines") > 0) {
+                    $(this).remove();
+                } else if ($(this).parent().data("mines") === 0) {
+                    var coordinates = $(this).data("coordinates");
+                    $(this).remove();
+                    (function (x, y) {
+                        var adjacent_cells = getAdjacentCellIndexes(x, y);
+                        for (var k = 0; k < adjacent_cells.length; k++) {
+                            var x = adjacent_cells[k][0];
+                            var y = adjacent_cells[k][1];
+                            var cell = $(field_matrix[y][x]);
+                            var button = cell.children($(".button"));
+                            if (button.length > 0) {
+                                button.remove();
+                                if (cell.data("mines") === 0) {
+                                    arguments.callee(x, y);
+                                }
+                            }
+                        }
+                    })(coordinates[0], coordinates[1]);
+                }
+
+                if ($("td .button").length === MINES) {
+                    $("#reset").addClass("winner");
+                    clearInterval(TIMER);
+                }
+
+            }
+        })
+
+        mine.append(button);
 
         row.append(mine);
         row_vector.push(mine)
