@@ -36,7 +36,7 @@ function getAdjacentCellIndexes(x, y) {
     });
 }
 
-function criarTabela(reset){
+function criarTabela(){
     var field_matrix = [];
     var field = $("#field table");
     var counter = 0;
@@ -177,19 +177,18 @@ function criarTabela(reset){
 }
 
 //chamando a função de criar a tabela
-criarTabela()
+criarTabela();
 
 //quando clicar no botão reset a tabela preenchida é removida e é criada uma tabela nova
 $("#reset").click(function(){
     $("tr").remove();
     criarTabela(); 
 
-//altera o background do botão reset
+    //altera o background do botão reset
     $(this).removeClass("game-over winner wow");  
 
-//reinicia o tempo quando o botão reset é clicado    
+    //reinicia o tempo quando o botão reset é clicado    
    clearInterval(TIMER);
    TIMER = false;
-   $("#timer").text(" ");
-    
+   $("#timer").text(" ");   
 })
