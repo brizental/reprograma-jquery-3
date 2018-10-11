@@ -11,7 +11,7 @@ HEIGHTBEGINNER = 8;
 //INTERMEDIATE LEVEL
 MINESINTERMEDIATE = 40;
 WIDTHINTERMEDIATE = 16,
-    HEIGHTINTERMEDIATE = 16;
+HEIGHTINTERMEDIATE = 16;
 
 //EXPERT LEVEL
 MINESEXPERT = 99;
@@ -19,6 +19,8 @@ WIDTHEXPERT = 24;
 HEIGHTEXPERT = 24
 
 TIMER = false;
+
+NAME = prompt("Insira seu nome", "Ex. Matilda");
 
 //ADIÇÃO DE EVENTO DE CLICK NO BOTÃO COM MUDANÇA DE CLASSES 
 var button = $(".level-button");
@@ -156,6 +158,24 @@ function criarTabela() {
                     if ($("td .button").length === MINES) {
                         $("#reset").addClass("winner");
                         clearInterval(TIMER);
+
+                        $.ajax({
+                            method: "POST",
+                            url: "https://campo-minado.herokuapp.com/save",
+                            contentType: "application/json",
+                            dataType: "json",
+                            data: JSON.stringify({
+                                timestamp: Date.now(),
+                                name: NAME,
+                                score: counter,
+                            })
+                        })
+                            .done(function (data) {
+                                console.log("data", data);
+                            })
+                            .catch(function (error) {
+                                console.log("error", error);
+                            })
                     }
                 }
             })
@@ -229,18 +249,18 @@ function criarTabela() {
 criarTabela();
 
 //quando clicar no botão reset a tabela preenchida é removida e é criada uma tabela nova
-$("#reset").click(function(){
+$("#reset").click(function () {
     $("tr").remove();
-    criarTabela(); 
+    criarTabela();
 
     //altera o background do botão reset
-    $(this).removeClass("game-over winner wow");  
+    $(this).removeClass("game-over winner wow");
 
     //apaga a quantidande de minas quando o botão reset é clicado   
     $("#mines").html("");
 
     //reinicia o tempo quando o botão reset é clicado    
-   clearInterval(TIMER);
-   TIMER = false;
-   $("#timer").text(" ");   
+    clearInterval(TIMER);
+    TIMER = false;
+    $("#timer").text(" ");
 })
