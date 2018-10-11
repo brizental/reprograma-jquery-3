@@ -20,7 +20,7 @@ HEIGHTEXPERT = 24
 
 TIMER = false;
 
-NAME = prompt("Insira seu nome", "Ex. Matilda");
+NAME = prompt("Insira seu nome", "Ex Matilda");
 
 //ADIÇÃO DE EVENTO DE CLICK NO BOTÃO COM MUDANÇA DE CLASSES 
 var button = $(".level-button");
