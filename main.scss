@@ -17,6 +17,28 @@ body {
     background-repeat: no-repeat;
     min-height: 100vh;
     position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.level-options{
+    position: absolute;
+    z-index: 999;
+    display:none;
+
+    ul{
+        list-style: none;
+        background-color:$windows-light-gray;
+        border: 2px outset darkgray;
+        
+        li{
+            padding: 3px;
+            &:hover {
+                background-color: $windows-blue;
+                color: white;
+            }  
+        }
+    }
 }
 
 .button {
@@ -54,7 +76,7 @@ body {
     border: 2px outset darkgray;
     margin: auto;
     padding: 3px;
-    width: 480px;
+    display: inline-block;
     font-size: 14px;
 
     .window-header {
@@ -136,6 +158,8 @@ body {
 
     #field {
         border: 4px inset $windows-light-gray;
+        display: flex;
+        justify-content: center;
 
         table {
             border-collapse: collapse;
