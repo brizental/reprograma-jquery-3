@@ -187,6 +187,9 @@ $("#reset").click(function(){
     //altera o background do botão reset
     $(this).removeClass("game-over winner wow");  
 
+    //apaga a quantidande de minas quando o botão reset é clicado   
+    $("#mines").html("");
+
     //reinicia o tempo quando o botão reset é clicado    
    clearInterval(TIMER);
    TIMER = false;
