@@ -1,42 +1,94 @@
+// DEFAULT MINES
 MINES = 40;
-HEIGHT = 20;
-WIDTH = 15;
+HEIGHT = 16;
+WIDTH = 16;
+
+//BEGINNER LEVEL
+MINESBEGINNER = 10;
+WIDTHBEGINNER = 8;
+HEIGHTBEGINNER = 8;
+
+//INTERMEDIATE LEVEL
+MINESINTERMEDIATE = 40;
+WIDTHINTERMEDIATE = 16,
+    HEIGHTINTERMEDIATE = 16;
+
+//EXPERT LEVEL
+MINESEXPERT = 99;
+WIDTHEXPERT = 24;
+HEIGHTEXPERT = 24
+
 TIMER = false;
 
+//ADIÇÃO DE EVENTO DE CLICK NO BOTÃO COM MUDANÇA DE CLASSES 
+var button = $(".level-button");
+button.click(function (event) {
+    event.preventDefault();
+    $(".level-options").toggle()
+})
+
+//ADIÇÃO DAS OPÇÕES DE NÍVEIS COM OS CLICKS
+var beginnerButton = $(".level-options__beginner");
+var intermediateButton = $(".level-options__intermediate");
+var expertButton = $(".level-options__expert");
+
+beginnerButton.click(function () {
+    $("tr").remove();
+    //MUDA VALOR ANTES DE CRIAR NOVO TABULEIRO
+    WIDTH = WIDTHBEGINNER;
+    MINES = MINESBEGINNER;
+    HEIGHT = HEIGHTBEGINNER;
+    criarTabela();
+})
+intermediateButton.click(function () {
+    $("tr").remove();
+    WIDTH = WIDTHINTERMEDIATE;
+    MINES = MINESINTERMEDIATE;
+    HEIGHT = HEIGHTINTERMEDIATE;
+    criarTabela();
+})
+expertButton.click(function () {
+    $("tr").remove();
+    WIDTH = WIDTHEXPERT;
+    MINES = MINESEXPERT;
+    HEIGHT = HEIGHTEXPERT;
+    criarTabela();
+})
 
 function getUniqueRandomIndexesIn2DArray(table, indexes) {
     indexes = indexes ? indexes : [];
     for (var i = indexes.length; i < MINES; i++) {
-        var random_cell = Math.floor(Math.random() * WIDTH); 
-        var random_row = Math.floor(Math.random() * HEIGHT); 
+        var random_cell = Math.floor(Math.random() * WIDTH);
+        var random_row = Math.floor(Math.random() * HEIGHT);
         for (var j = 0; j < indexes.length; j++) {
             if (indexes[j][0] === random_cell &&
                 indexes[j][1] === random_row) {
-                return arguments.callee(table, indexes);
+                return getUniqueRandomIndexesIn2DArray(table, indexes);
             }
         }
         indexes.push([random_cell, random_row]); // a criacao da tabela comeca pelo row e depois pelo cell (row tr = y | cell td = x) // ERRO 1
     }
+    console.log(indexes)
     return indexes;
 }
 
 function getAdjacentCellIndexes(x, y) {
     return $.grep([
-        [ x - 1, y - 1 ],
-        [ x, y - 1 ],
-        [ x + 1, y - 1 ],
-        [ x - 1, y ],
-        [ x + 1, y ],
-        [ x - 1, y + 1 ],
-        [ x, y + 1 ],
-        [ x + 1, y + 1 ]
+        [x - 1, y - 1],
+        [x, y - 1],
+        [x + 1, y - 1],
+        [x - 1, y],
+        [x + 1, y],
+        [x - 1, y + 1],
+        [x, y + 1],
+        [x + 1, y + 1]
     ], function (element) {
-        return element[0] >= 0 && element[1] >= 0 
-            && element[0] < WIDTH  && element[1] < HEIGHT// erro de digitacao do 0 e 1 | ordem y (height), x (width) // ERRO 2
+        return element[0] >= 0 && element[1] >= 0
+            && element[0] < WIDTH && element[1] < HEIGHT // erro de digitacao do 0 e 1 | ordem y (height), x (width) // ERRO 2
     });
 }
 
-function criarTabela(){
+function criarTabela() {
     var field_matrix = [];
     var field = $("#field table");
     var counter = 0;
@@ -55,7 +107,7 @@ function criarTabela(){
                 return false;
             });
 
-            button.mousedown(function(event) {
+            button.mousedown(function (event) {
                 if (!TIMER) {
                     TIMER = setInterval(function () {
                         counter++;
@@ -68,7 +120,7 @@ function criarTabela(){
                 } else {
                     $("#reset").addClass("wow");
                 }
-            }); 
+            });
 
             button.mouseup(function () {
                 $("#reset").removeClass("wow");
@@ -105,7 +157,6 @@ function criarTabela(){
                         $("#reset").addClass("winner");
                         clearInterval(TIMER);
                     }
-
                 }
             })
 
@@ -117,10 +168,9 @@ function criarTabela(){
         field.append(row);
         field_matrix.push(row_vector);
     }
-
     // CONSIDERAR QUE tr = y | td = x // ERRO 3 (valido para os proximos comentarios abaixo)
     var mine_indexes = getUniqueRandomIndexesIn2DArray(field_matrix);
-    $.each(mine_indexes, function(index, coordinates) {
+    $.each(mine_indexes, function (index, coordinates) {
         var x = coordinates[0]; // CONSIDERAR QUE tr = y | td = x 
         var y = coordinates[1];
         var mine = $(field_matrix[y][x]);
@@ -129,7 +179,7 @@ function criarTabela(){
 
     $.each(mine_indexes, function (index, coordinates) {
         var adjacent_cells = getAdjacentCellIndexes(coordinates[0], coordinates[1]); // coordenadas alteradas pq sempre começamos pelo y e nao pelo x
-        $.each(adjacent_cells, function(index, coordinates) {
+        $.each(adjacent_cells, function (index, coordinates) {
             var x = coordinates[0];
             var y = coordinates[1];
             var cell = $(field_matrix[y][x]);
@@ -166,8 +216,8 @@ function criarTabela(){
         })
     });
 
-    $.each(field_matrix, function(index, row) {
-        $.each(row, function(index, cell) {
+    $.each(field_matrix, function (index, row) {
+        $.each(row, function (index, cell) {
             var number = $(cell).data("mines");
             if (number > 0) {
                 $(cell).append(number);
@@ -176,7 +226,6 @@ function criarTabela(){
     });
 }
 
-//chamando a função de criar a tabela
 criarTabela();
 
 //quando clicar no botão reset a tabela preenchida é removida e é criada uma tabela nova
