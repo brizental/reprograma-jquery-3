@@ -32,37 +32,28 @@ var beginnerButton = $(".level-options__beginner");
 var intermediateButton = $(".level-options__intermediate");
 var expertButton = $(".level-options__expert");
 
-
-if (beginnerButton.click(function () {
+beginnerButton.click(function () {
     $("tr").remove();
     //MUDA VALOR ANTES DE CRIAR NOVO TABULEIRO
     WIDTH = WIDTHBEGINNER;
     MINES = MINESBEGINNER;
     HEIGHT = HEIGHTBEGINNER;
     criarTabela();
-})) {
-} 
-if (intermediateButton.click(function () {
+})
+intermediateButton.click(function () {
     $("tr").remove();
     WIDTH = WIDTHINTERMEDIATE;
     MINES = MINESINTERMEDIATE;
     HEIGHT = HEIGHTINTERMEDIATE;
     criarTabela();
-})) {
-} 
-if (expertButton.click(function () {
+})
+expertButton.click(function () {
     $("tr").remove();
     WIDTH = WIDTHEXPERT;
     MINES = MINESEXPERT;
     HEIGHT = HEIGHTEXPERT;
     criarTabela();
-})) {
-}
-
-
-
-
-
+})
 
 function getUniqueRandomIndexesIn2DArray(table, indexes) {
     indexes = indexes ? indexes : [];
