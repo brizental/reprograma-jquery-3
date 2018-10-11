@@ -35,7 +35,7 @@ var intermediateButton = $(".level-options__intermediate");
 var expertButton = $(".level-options__expert");
 
 beginnerButton.click(function () {
-    $("tr").remove();
+    $("#field tr").remove();
     //MUDA VALOR ANTES DE CRIAR NOVO TABULEIRO
     WIDTH = WIDTHBEGINNER;
     MINES = MINESBEGINNER;
@@ -43,14 +43,14 @@ beginnerButton.click(function () {
     criarTabela();
 })
 intermediateButton.click(function () {
-    $("tr").remove();
+   
     WIDTH = WIDTHINTERMEDIATE;
     MINES = MINESINTERMEDIATE;
     HEIGHT = HEIGHTINTERMEDIATE;
     criarTabela();
 })
 expertButton.click(function () {
-    $("tr").remove();
+   
     WIDTH = WIDTHEXPERT;
     MINES = MINESEXPERT;
     HEIGHT = HEIGHTEXPERT;
@@ -250,7 +250,7 @@ criarTabela();
 
 //quando clicar no botão reset a tabela preenchida é removida e é criada uma tabela nova
 $("#reset").click(function () {
-    $("tr").remove();
+    $("#field tr").remove();
     criarTabela();
 
     //altera o background do botão reset
@@ -263,4 +263,25 @@ $("#reset").click(function () {
     clearInterval(TIMER);
     TIMER = false;
     $("#timer").text(" ");
+})
+
+$.ajax("https://campo-minado.herokuapp.com/get").done(function (data) {
+    var divTabela = $("<div>")
+    var tabela = $("<table>");
+    $(".window").after(divTabela);
+    divTabela.append(tabela)
+
+    divTabela.addClass("resultado-tabela");
+
+    for (var i = 0; i < data.length; i++) {
+        var linhas = $("<tr>");
+        var cellNome = $("<td>").text(data[i].name);
+        var cellData = $("<td>").text(data[i].date);
+        var cellScore = $("<td>").text(data[i].score);
+
+        linhas.append(cellNome);
+        linhas.append(cellData);
+        linhas.append(cellScore);
+        tabela.append(linhas);
+    }
 })
